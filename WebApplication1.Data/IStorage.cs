@@ -15,8 +15,8 @@ namespace WebApplication1.Data
         /// </summary>
         /// <param name="productId">The ID to search for</param>
         /// <returns>The product with that ID</returns>
-        Task<Product> Find(Guid productId);
-        Task<Product> FindByName(Guid productId);
+        Task<Product> Find(Guid id);
+        Task<Product> FindByName(string name);
         Task<Guid> Add(Product product);
         Task Update(Product product);
     }

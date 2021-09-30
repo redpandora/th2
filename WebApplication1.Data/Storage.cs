@@ -19,17 +19,17 @@ namespace WebApplication1.Data
             throw new NotImplementedException();
         }
 
-        public async Task<Product> Find(Guid productId)
+        public async Task<Product> Find(Guid id)
         {
-            var query = (from product in storageContext.Products
-                         where productId == product.ProductId
-                         select product);
-            return await query.FirstOrDefaultAsync();
+            return await storageContext.Products.FindAsync(id);
         }
 
-        public async Task<Product> FindByName(Guid productId)
+        public async Task<Product> FindByName(string name)
         {
-            throw new NotImplementedException();
+            var query = (from product in storageContext.Products
+                         where name == product.Name
+                         select product);
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task Update(Product product)
