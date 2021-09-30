@@ -5,22 +5,29 @@ namespace WebApplication1.Data
 {
     public class Storage : IStorage
     {
-        Task<Guid> IStorage.Add(Product product)
+        private IStorageContext storageContext;
+
+        public Storage(IStorageContext storageContext)
+        {
+            this.storageContext = storageContext;
+        }
+
+        public async Task<Guid> Add(Product product)
         {
             throw new NotImplementedException();
         }
 
-        Task<Product> IStorage.Find(Guid productId)
+        public async Task<Product> Find(Guid productId)
         {
             throw new NotImplementedException();
         }
 
-        Task<Product> IStorage.FindByName(Guid productId)
+        public async Task<Product> FindByName(Guid productId)
         {
             throw new NotImplementedException();
         }
 
-        Task IStorage.Update(Product product)
+        public async Task Update(Product product)
         {
             throw new NotImplementedException();
         }
