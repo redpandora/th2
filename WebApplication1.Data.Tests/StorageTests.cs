@@ -38,7 +38,7 @@ namespace WebApplication1.Data.Tests
 
             StorageContext storageContext = new StorageContext(options);
             storageContext.Products.Add(new Product { ProductId = Guid.Parse(ProductOneID),Name = "Product One" });
-
+            storageContext.SaveChanges();
             return storageContext;
         }
     }

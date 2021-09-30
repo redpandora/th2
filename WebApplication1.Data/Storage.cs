@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebApplication1.Data
@@ -19,7 +21,10 @@ namespace WebApplication1.Data
 
         public async Task<Product> Find(Guid productId)
         {
-            throw new NotImplementedException();
+            var query = (from product in storageContext.Products
+                         where productId == product.ProductId
+                         select product);
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<Product> FindByName(Guid productId)
