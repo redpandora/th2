@@ -4,6 +4,7 @@ using Moq;
 using System;
 using System.Threading.Tasks;
 using WeApplication1.Infrastructure;
+using WeApplication1.Infrastructure.Models;
 
 namespace WebApplication1.Data.Tests
 {
@@ -30,16 +31,18 @@ namespace WebApplication1.Data.Tests
             // assert
             Assert.IsNotNull(product);
         }
-/*
+
         [TestMethod]
         public async Task CanFindProductByName()
         {
             // arrange
-            IStorageContext storageContext = CreateMockContext("CanFindProductByName");
-            var storage = new Storage(storageContext);
+            Mock<IStorage> storageMock = new Mock<IStorage>();
+            storageMock.Setup(m => m.FindByName(ProductOneName)).ReturnsAsync(new Product { ProductId = Guid.Parse(ProductOneID), Name = ProductOneName });
+
+            var service = new ProductService(storageMock.Object);
 
             // act
-            var product = await storage.FindByName(ProductOneName);
+            var product = await service.FindByName(ProductOneName);
 
             // assert
             Assert.IsNotNull(product);
@@ -49,18 +52,18 @@ namespace WebApplication1.Data.Tests
         public async Task CanUpdateProduct()
         {
             // arrange
-            IStorageContext storageContext = CreateMockContext("CanUpdateProduct");
-            var storage = new Storage(storageContext);
-            var product = new Product { ProductId = Guid.Parse(ProductOneID), Name = ProductOneNewName };
+            Mock<IStorage> storageMock = new Mock<IStorage>();
+            Product updatedProduct = null;
+
+            storageMock.Setup(m => m.Update(It.IsAny<Product>())).Callback((Product product) => updatedProduct = product);
+            var service = new ProductService(storageMock.Object);
 
             // act
-            await storage.Update(product);
+            await service.UpdateProduct(new ProductData { ProductId = Guid.Parse(ProductOneID), Name = ProductOneNewName });
 
             // assert
-            var name = storageContext.Products.Find(Guid.Parse(ProductOneID)).Name;
+            Assert.AreEqual(updatedProduct.Name, ProductOneNewName);
+        }
 
-            Assert.AreEqual(ProductOneNewName, name);
-        }        
-*/
     }
 }
