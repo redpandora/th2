@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace WebApplication1.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService productService;
+        private readonly ILogger<ProductController> logger;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ILogger<ProductController> logger)
         {
-            this.productService = productService;
+            this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
 
@@ -57,7 +60,7 @@ namespace WebApplication1.Controllers
             try
             {
                 // validate arguments
-                if (name == null) throw new ArgumentException($"Argument {nameof(name)} not specified");
+                if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException($"Argument {nameof(name)} not specified");
 
                 var product = await productService.FindByName(name);
                 if (product == null) return NotFound();

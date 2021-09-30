@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -20,10 +21,12 @@ namespace WebApplication1.Tests
         {
             // arrange
 
-            Mock<IProductService> productService = new Mock<IProductService>();
-            productService.Setup(m => m.Find(Guid.Parse(ProductOneID))).ReturnsAsync(new ProductData { ProductId = Guid.Parse(ProductOneID), Name = ProductOneName });
+            Mock<IProductService> productServiceMock = new Mock<IProductService>();
+            productServiceMock.Setup(m => m.Find(Guid.Parse(ProductOneID))).ReturnsAsync(new ProductData { ProductId = Guid.Parse(ProductOneID), Name = ProductOneName });
 
-            ProductController controller = new ProductController(productService.Object);
+            Mock<ILogger<ProductController>> loggerMock = new Mock<ILogger<ProductController>>();
+
+            ProductController controller = new ProductController(productServiceMock.Object, loggerMock.Object);
 
             // act
             var result = await controller.GetProduct(Guid.Parse(ProductOneID));
