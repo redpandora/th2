@@ -7,7 +7,7 @@ namespace WebApplication1.Data
 {
     public class Storage : IStorage
     {
-        private IStorageContext storageContext;
+        private readonly IStorageContext storageContext;
 
         public Storage(IStorageContext storageContext)
         {

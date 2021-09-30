@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 using WeApplication1.Infrastructure.Models;
 using WebApplication1.Data;
@@ -8,10 +9,12 @@ namespace WeApplication1.Infrastructure
     public class ProductService : IProductService
     {
         private readonly IStorage storage;
+        private readonly ILogger<ProductService> logger;
 
-        public ProductService(IStorage storage)
+        public ProductService(IStorage storage, ILogger<ProductService> logger)
         {
-            this.storage = storage;
+            this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<ProductData> Find(Guid productId)

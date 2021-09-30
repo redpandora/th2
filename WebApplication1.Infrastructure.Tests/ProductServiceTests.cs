@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -23,7 +24,9 @@ namespace WebApplication1.Data.Tests
             Mock<IStorage> storageMock = new Mock<IStorage>();
             storageMock.Setup(m => m.Find(Guid.Parse(ProductOneID))).ReturnsAsync(new Product { ProductId = Guid.Parse(ProductOneID), Name = ProductOneName });
 
-            var service = new ProductService(storageMock.Object);
+            Mock<ILogger<ProductService>> loggerMock = new Mock<ILogger<ProductService>>();
+
+            var service = new ProductService(storageMock.Object, loggerMock.Object);
 
             // act
             var product = await service.Find(Guid.Parse(ProductOneID));
@@ -39,7 +42,9 @@ namespace WebApplication1.Data.Tests
             Mock<IStorage> storageMock = new Mock<IStorage>();
             storageMock.Setup(m => m.FindByName(ProductOneName)).ReturnsAsync(new Product { ProductId = Guid.Parse(ProductOneID), Name = ProductOneName });
 
-            var service = new ProductService(storageMock.Object);
+            Mock<ILogger<ProductService>> loggerMock = new Mock<ILogger<ProductService>>();
+
+            var service = new ProductService(storageMock.Object, loggerMock.Object);
 
             // act
             var product = await service.FindByName(ProductOneName);
@@ -54,9 +59,11 @@ namespace WebApplication1.Data.Tests
             // arrange
             Mock<IStorage> storageMock = new Mock<IStorage>();
             Product updatedProduct = null;
-
             storageMock.Setup(m => m.Update(It.IsAny<Product>())).Callback((Product product) => updatedProduct = product);
-            var service = new ProductService(storageMock.Object);
+
+            Mock<ILogger<ProductService>> loggerMock = new Mock<ILogger<ProductService>>();
+
+            var service = new ProductService(storageMock.Object, loggerMock.Object);
 
             // act
             await service.UpdateProduct(new ProductData { ProductId = Guid.Parse(ProductOneID), Name = ProductOneNewName });

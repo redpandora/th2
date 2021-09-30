@@ -68,10 +68,12 @@ namespace WebApplication1.Controllers
             }
             catch (ArgumentException ex)
             {
+                logger.LogError(ex, $"USAGE ERROR Getting product by name");
                 return BadRequest(ex.Message ?? "Invalid parameters");
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, $"ERROR Getting product by name");
                 return StatusCode(500);
             }
         }
