@@ -14,9 +14,11 @@ namespace WeApplication1.Infrastructure
             this.storage = storage;
         }
 
-        public Task<ProductData> Find(Guid productId)
+        public async Task<ProductData> Find(Guid productId)
         {
-            throw new NotImplementedException();
+            var product = await storage.Find(productId);
+
+            return FromProduct(product);
         }
 
         public Task<ProductData> FindByName(string productName)
@@ -32,6 +34,15 @@ namespace WeApplication1.Infrastructure
         public Task UpdateProduct(ProductData product)
         {
             throw new NotImplementedException();
+        }
+
+        private ProductData FromProduct(Product product)
+        {
+            return new ProductData
+            {
+                Name = product.Name,
+                ProductId = product.ProductId
+            };
         }
     }
 }
