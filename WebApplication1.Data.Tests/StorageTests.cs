@@ -53,7 +53,7 @@ namespace WebApplication1.Data.Tests
             await storage.Update(product);
 
             // assert
-            var name = storageContext.Products.Find(ProductOneID).Name;
+            var name = storageContext.Products.Find(Guid.Parse(ProductOneID)).Name;
 
             Assert.AreEqual(ProductOneNewName, name);
         }

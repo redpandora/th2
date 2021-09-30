@@ -34,7 +34,13 @@ namespace WebApplication1.Data
 
         public async Task Update(Product product)
         {
-            throw new NotImplementedException();
+            var originalProduct = await Find(product.ProductId);
+            if (originalProduct == null) throw new InvalidOperationException($"Product with {product.ProductId} not found");
+
+            // update values
+            originalProduct.Name = product.Name;
+
+            await storageContext.SaveChangesAsync();
         }
     }
 }
