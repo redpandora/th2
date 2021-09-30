@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Threading.Tasks;
 
 namespace WebApplication1.Data.Tests
 {
@@ -11,14 +12,14 @@ namespace WebApplication1.Data.Tests
         private const string ProductTwoID = "6FF6160E-CED3-4BB0-98C7-E4BF2D4BF3C4";
 
         [TestMethod]
-        public void CanFindProductById()
+        public async Task CanFindProductById()
         {
             // arrange
             IStorageContext storageContext = CreateMockContext();
             var storage = new Storage(storageContext);
 
             // act
-            var product = storage.Find(Guid.Parse(ProductOneID));
+            var product = await storage.Find(Guid.Parse(ProductOneID));
 
             // assert
             Assert.IsNotNull(product);
