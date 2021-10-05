@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using WeApplication1.Infrastructure.Models;
 using WebApplication1.Data;
@@ -17,26 +18,41 @@ namespace WeApplication1.Infrastructure
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<ProductData> Find(Guid productId)
+        public async Task<ProductData> Find(Guid productId, CancellationToken cancellationToken = default)
         {
-            var product = await storage.Find(productId);
+            logger.LogInformation
+            var product = await storage.Find(productId, cancellationToken);
 
             return FromProduct(product);
         }
 
-        public Task<ProductData> FindByName(string productName)
+        public async Task<ProductData> FindByName(string productName, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var product = await storage.FindByName(productName, cancellationToken);
+
+            return FromProduct(product);
         }
 
-        public Task<Guid> StoreProduct(ProductData product)
+        public async Task StoreProduct(ProductData product, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            Product productToAdd = ToProduct(product);
+            await storage.Add(productToAdd);
+            product.ProductId = productToAdd.ProductId;
         }
 
-        public Task UpdateProduct(ProductData product)
+        public async Task UpdateProduct(ProductData product)
         {
-            throw new NotImplementedException();
+            Product productToAdd = ToProduct(product);
+            await storage.Update(productToAdd);
+        }
+
+        private Product ToProduct(ProductData product)
+        {
+            return new Product
+            {
+                Name = product.Name,
+                ProductId = product.ProductId
+            };
         }
 
         private ProductData FromProduct(Product product)
