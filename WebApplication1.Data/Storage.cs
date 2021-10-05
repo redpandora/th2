@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebApplication1.Data
@@ -14,25 +15,31 @@ namespace WebApplication1.Data
             this.storageContext = storageContext;
         }
 
-        public async Task<Guid> Add(Product product)
+        public async Task Add(Product product, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            this.storageContext.Products.Add(product);
+            await storageContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<Product> Find(Guid id)
+        public async Task<Product> Find(Guid id, CancellationToken cancellationToken = default)
         {
-            return await storageContext.Products.FindAsync(id);
+            return await storageContext.Products.FindAsync(id, cancellationToken);
         }
 
-        public async Task<Product> FindByName(string name)
+        public async Task<Product> FindByName(string name, CancellationToken cancellationToken = default)
         {
             var query = (from product in storageContext.Products
                          where name == product.Name
                          select product);
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task Update(Product product)
+        public IQueryable<Product> GetAll(CancellationToken cancellationToken = default)
+        {
+            return storageContext.Products;
+        }
+
+        public async Task Update(Product product, CancellationToken cancellationToken = default)
         {
             var originalProduct = await Find(product.ProductId);
             if (originalProduct == null) throw new InvalidOperationException($"Product with {product.ProductId} not found");
@@ -40,7 +47,7 @@ namespace WebApplication1.Data
             // update values
             originalProduct.Name = product.Name;
 
-            await storageContext.SaveChangesAsync();
+            await storageContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

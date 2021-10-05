@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using WeApplication1.Infrastructure;
 using WeApplication1.Infrastructure.Models;
@@ -22,7 +23,7 @@ namespace WebApplication1.Data.Tests
         {
             // arrange
             Mock<IStorage> storageMock = new Mock<IStorage>();
-            storageMock.Setup(m => m.Find(Guid.Parse(ProductOneID))).ReturnsAsync(new Product { ProductId = Guid.Parse(ProductOneID), Name = ProductOneName });
+            storageMock.Setup(m => m.Find(Guid.Parse(ProductOneID), It.IsAny<CancellationToken>())).ReturnsAsync(new Product { ProductId = Guid.Parse(ProductOneID), Name = ProductOneName });
 
             Mock<ILogger<ProductService>> loggerMock = new Mock<ILogger<ProductService>>();
 
@@ -40,7 +41,7 @@ namespace WebApplication1.Data.Tests
         {
             // arrange
             Mock<IStorage> storageMock = new Mock<IStorage>();
-            storageMock.Setup(m => m.FindByName(ProductOneName)).ReturnsAsync(new Product { ProductId = Guid.Parse(ProductOneID), Name = ProductOneName });
+            storageMock.Setup(m => m.FindByName(ProductOneName, It.IsAny<CancellationToken>())).ReturnsAsync(new Product { ProductId = Guid.Parse(ProductOneID), Name = ProductOneName });
 
             Mock<ILogger<ProductService>> loggerMock = new Mock<ILogger<ProductService>>();
 
@@ -59,7 +60,7 @@ namespace WebApplication1.Data.Tests
             // arrange
             Mock<IStorage> storageMock = new Mock<IStorage>();
             Product updatedProduct = null;
-            storageMock.Setup(m => m.Update(It.IsAny<Product>())).Callback((Product product) => updatedProduct = product);
+            storageMock.Setup(m => m.Update(It.IsAny<Product>(), It.IsAny<CancellationToken>())).Callback((Product product) => updatedProduct = product);
 
             Mock<ILogger<ProductService>> loggerMock = new Mock<ILogger<ProductService>>();
 
